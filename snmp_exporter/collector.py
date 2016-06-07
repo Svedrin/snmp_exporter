@@ -25,10 +25,15 @@ def walk_oid(session, oid):
         last_oid = v.tag[1:] + '.' + v.iid
         if not (last_oid + '.').startswith(oid + '.'):
           return
-        if v.iid == '0':
-          yield v.tag[1:], v.val
+        # Some SNMP agents return the null terminator along with strings.
+        if v.type == "OCTETSTR":
+          val = v.val.strip('\x00')
         else:
-          yield last_oid, v.val
+          val = v.val
+        if v.iid == '0':
+          yield v.tag[1:], val
+        else:
+          yield last_oid, val
 
 def oid_to_tuple(oid):
   """Convert an OID to a tuple of numbers"""
