@@ -61,6 +61,9 @@ class SnmpExporterHandler(BaseHTTPRequestHandler):
       self.send_response(404)
       self.end_headers()
 
+  def log_message(self, format, *args):
+    return
+
 def start_http_server(config_path, port):
   handler = lambda *args, **kwargs: SnmpExporterHandler(config_path, *args, **kwargs)
   server = ForkingHTTPServer(('', port), handler)
