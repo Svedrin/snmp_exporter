@@ -88,7 +88,10 @@ def parse_indexes(suboid, index_config, lookup_config, oids):
     full_oid = oid_to_tuple(lookup['oid']) + tuple(index_oid)
     value = oids.get(full_oid)
     if value is not None:
-      labels[lookup['labelname']] = str(value)
+      try:
+        labels[lookup['labelname'].decode('utf-8')] = value.decode('utf-8')
+      except UnicodeDecodeError:
+        labels[lookup['labelname'].decode('ascii', errors='ignore')] = value.decode('ascii', errors='ignore')
 
   return labels
 
